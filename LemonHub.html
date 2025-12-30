@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Lemon Hub 2.0 [SUBPAGE]</title>
+        
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=BBH+Bogle&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+        
+        <!-- Google Icons-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        
+        <!-- TailwindCSS -->
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        
+        <style>
+        
+            :root {
+                --theme-color: rgb(245, 201, 3);
+                --color-white: rgb(245, 245, 245);
+                --color-black: rgb(10, 10, 10);
+            }
+            
+            @keyframes shine {
+                0% {
+                    left: -18px;
+                }
+                100 {
+                    left: 100px;
+                }
+            }
+            
+            body {
+                margin: 0;
+            }
+            h1 {
+                font-family: 'BBH Bogle';
+            }
+            
+            body > nav:first-of-type::after {
+                content: '';
+                position: absolute;
+                top: -20px;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: transparent;
+                z-index: -1;
+            }
+            nav a {
+                position: relative;
+            }
+            nav a::before {
+                content: '';
+                background-color: white;
+                width: 0;
+                height: 5px;
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                opacity: 0;
+                transition: 300ms;
+            }
+            nav a:hover::before {
+                width: 100%;
+                opacity: 1;
+            }
+            
+            .page {
+                background-color: var(--color-white);
+                color: var(--color-black);
+                margin-top: 70%;
+                padding: 4em;
+                z-index: -2;
+            }
+            
+            .project {
+                position: relative;
+            }
+            .project:nth-child(1)::after {
+                content: '';
+                position: absolute;
+                left: -40px;
+                top: 0;
+                height: 300px;
+                box-shadow: 0 0 20px 20px rgba(245, 245, 245, 0.5);
+                background-color: var(--color-white);
+                transform: rotate(20deg);
+                transition: all;
+                transition-duration: 300ms;
+            }
+            .project:hover::after {
+                left: 270px;
+            }
+            .project:nth-child(1)::before {
+                content: '👑';
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                right: -20px;
+                top: -20px;
+                width: 40%;
+                height: 30%;
+                background-color: var(--color-white);
+                border-radius: 100%;
+                padding: 6px;
+                font-size: 40px;
+            }
+        </style>
+        
+        <script type='module'>
+            let filters = []
+            
+            const projectList = document.getElementById('projectList')
+            const filterList = document.getElementsByClassName('filter')
+            const projects = [
+                {
+                    name: 'Black \'n\' White',
+                    url: 'https://www.khanacademy.org/computer-programming/black-n-white-game/6144760533663744',
+                    thumb: 'https://www.khanacademy.org/computer-programming/black-n-white-game/6144760533663744/6645969359126528.png',
+                    votes: 61,
+                },
+                {
+                    name: 'Speedshuttle',
+                    url: 'https://www.khanacademy.org/computer-programming/speedshuttle-khantober/5838425277513728',
+                    thumb: 'https://www.khanacademy.org/computer-programming/speedshuttle-khantober/5838425277513728/4627173834407936.png',
+                    votes: 37,
+                },
+                {
+                    name: 'Liftoff',
+                    url: 'https://www.khanacademy.org/computer-programming/liftoff-escape-from-the-earth-game/5991178950000640',
+                    thumb: 'https://www.khanacademy.org/computer-programming/liftoff-escape-from-earth-game/5991178950000640/4708409984794624.png',
+                    votes: 8,
+                },
+            ].sort((a, b) => b.votes - a.votes)
+            
+            for (let i = 0; i < projects.length; i ++){
+                const newProject = document.createElement("div")
+                const project = projects[i]
+                
+                newProject.innerHTML = `
+                <div class="flex w-full justify-center">
+                    <div class="text-center bg-gray-700/30 rounded-xl p-3 cursor-pointer group transition duration-300 hover:bg-gray-700/50"
+                         onclick="javascript:window.open('https://www.khanacademy.org/computer-programming/black-n-white-game/6144760533663744/5266442959634432')">
+                        <img src='${project.thumb}' class="rounded-t-lg">
+                        <div class="bg-gray-700/20 p-1 rounded-b-lg">
+                            <h1 class="text-3xl mt-4">${project.name}</h1>
+                            <h2 class="text-2xl font-bold">${project.votes} votes</h2>
+                        </div>
+                    </div>
+                </div>`;
+                for (var j in project.filters){
+                    newProject.innerHTML += `<div><h4 style='padding:10px;'>${project.filters[j]}</h4></div>`
+                }
+                
+                
+                newProject.classList.add('project')
+                newProject.addEventListener('click', function(){
+                    window.open(project.url)
+                })
+                
+                projectList.appendChild(newProject)
+                
+            }
+            
+            for (var i in filterList){
+                filter = filterList[i]
+                
+                filter.addEventListener('click', function(){
+                    filters.push('games')
+                })
+            }
+        </script> <!-- Projects -->
+    </head>
+    <body style="font-family: Google Sans;">
+        <svg id="visual" viewBox="0 0 600 600" width="600" height="600" xmlns="http://www.w3.org/2000/svg" version="1.1" class="fixed top-0 left-0 z-[-1]">
+        <rect x="0" y="0" width="600" height="600" fill="#e3c100"></rect><defs><linearGradient id="grad1_0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#b19600" stop-opacity="1"></stop><stop offset="70%" stop-color="#b19600" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad1_1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#b19600" stop-opacity="1"></stop><stop offset="70%" stop-color="#caab00" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad1_2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#e3c100" stop-opacity="1"></stop><stop offset="70%" stop-color="#caab00" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad2_0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#b19600" stop-opacity="1"></stop><stop offset="70%" stop-color="#b19600" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad2_1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#caab00" stop-opacity="1"></stop><stop offset="70%" stop-color="#b19600" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad2_2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="30%" stop-color="#caab00" stop-opacity="1"></stop><stop offset="70%" stop-color="#e3c100" stop-opacity="1"></stop></linearGradient></defs><g transform="translate(600, 0)"><path d="M0 318.2C-25.6 307.2 -51.3 296.2 -77.4 288.8C-103.5 281.4 -130 277.5 -154.5 267.6C-179 257.7 -201.4 241.7 -223.4 223.4C-245.5 205.2 -267.2 184.5 -275.6 159.1C-284 133.7 -279.1 103.4 -284 76.1C-288.9 48.8 -303.5 24.4 -318.2 0L0 0Z" fill="#d6b600"></path><path d="M0 212.1C-17.1 204.8 -34.2 197.5 -51.6 192.5C-69 187.6 -86.7 185 -103 178.4C-119.3 171.8 -134.3 161.2 -149 149C-163.7 136.8 -178.1 123 -183.7 106.1C-189.3 89.1 -186.1 68.9 -189.3 50.7C-192.6 32.5 -202.4 16.3 -212.1 0L0 0Z" fill="#bda100"></path><path d="M0 106.1C-8.5 102.4 -17.1 98.7 -25.8 96.3C-34.5 93.8 -43.3 92.5 -51.5 89.2C-59.7 85.9 -67.1 80.6 -74.5 74.5C-81.8 68.4 -89.1 61.5 -91.9 53C-94.7 44.6 -93 34.5 -94.7 25.4C-96.3 16.3 -101.2 8.1 -106.1 0L0 0Z" fill="#b19600"></path></g><g transform="translate(0, 600)"><path d="M0 -318.2C27.1 -311.8 54.3 -305.3 78.9 -294.6C103.6 -283.9 125.9 -268.9 146.5 -253.7C167.1 -238.6 186.1 -223.4 208.6 -208.6C231 -193.8 256.9 -179.5 274.5 -158.5C292.1 -137.5 301.5 -109.9 307.4 -82.4C313.3 -54.8 315.7 -27.4 318.2 0L0 0Z" fill="#d6b600"></path><path d="M0 -212.1C18.1 -207.8 36.2 -203.6 52.6 -196.4C69.1 -189.3 83.9 -179.2 97.7 -169.2C111.4 -159.1 124.1 -148.9 139.1 -139.1C154 -129.2 171.3 -119.7 183 -105.7C194.8 -91.7 201 -73.3 204.9 -54.9C208.8 -36.6 210.5 -18.3 212.1 0L0 0Z" fill="#bda100"></path><path d="M0 -106.1C9 -103.9 18.1 -101.8 26.3 -98.2C34.5 -94.6 42 -89.6 48.8 -84.6C55.7 -79.5 62 -74.5 69.5 -69.5C77 -64.6 85.6 -59.8 91.5 -52.8C97.4 -45.8 100.5 -36.6 102.5 -27.5C104.4 -18.3 105.2 -9.1 106.1 0L0 0Z" fill="#b19600"></path></g></svg>
+        <nav id="nav" class="my-4 mx-4 px-6 py-8 z-10
+                        opacity-0 w-[95%] max-w-full
+                        rounded-full text-white
+                        flex justify-between items-center 
+                        fixed top-0 left-0
+                        bg-black/30
+                        transform -translate-y-40">
+            <p onclick="javascript:nav(1)"
+               class="font-bold text-3xl
+                      cursor-pointer">Lemon Hub</p>
+                <div>
+                <a href="javascript:nav(2)"
+                   class="text-lg ml-4">About</a>
+                <a href="javascript:nav(3)"
+                   class="text-lg ml-4">Help</a>
+                <a href="javascript:nav(4)"
+                   class="text-lg ml-4">Showcase</a>
+                <button onclick="javascript:window.open('https://www.khanacademy.org/computer-programming/lemon-hub-20-subpage/4710238676172800?qa_expand_key=ag5zfmtoYW4tYWNhZGVteXJACxIIVXNlckRhdGEiHWthaWRfNjcyNTU5NDE4OTQxNDExMDAwMjA5NzQ3DAsSCEZlZWRiYWNrGICA59jj2OcIDA&qa_expand_type=comment')"
+                   class="bg-white text-black text-lg rounded-full ml-4 p-3 transition duration-500 hover:bg-black hover:text-white cursor-pointer">Subscribe</button>
+            </div>
+        </nav>
+        <header id="header" class="w-full h-full p-4 text-white">
+            <nav class="px-5 py-6 rounded-full z-8
+                        flex justify-between 
+                        items-center
+                        transition duration-500
+                        bg-transparent
+                        hover:bg-black/30">
+                <p onclick="javascript:nav(1)"
+                   class="font-bold text-3xl
+                          cursor-pointer">Lemon Hub</p>
+                   
+                <div>
+                <a href="javascript:nav(2)"
+                   class="text-lg ml-4">About</a>
+                <a href="javascript:nav(3)"
+                   class="text-lg ml-4">Help</a>
+                <a href="javascript:nav(4)"
+                   class="text-lg ml-4">Showcase</a>
+                <button onclick="javascript:window.open('https://www.khanacademy.org/computer-programming/lemon-hub-20-subpage/4710238676172800?qa_expand_key=ag5zfmtoYW4tYWNhZGVteXJACxIIVXNlckRhdGEiHWthaWRfNjcyNTU5NDE4OTQxNDExMDAwMjA5NzQ3DAsSCEZlZWRiYWNrGICA59jj2OcIDA&qa_expand_type=comment')"
+                   class="bg-white text-black text-lg rounded-full ml-4 p-3 transition duration-500 hover:bg-black hover:text-white cursor-pointer">Subscribe</button>
+                </div>
+            </nav>
+            <div class="absolute left-[10%] top-[70%] ">
+                <h1 class="select-none font-bold text-6xl" style="font-family: BBH Bogle" onclick="javascript:window.scroll({top:window.outerHeight,left:0,behavior:'smooth'})">web and game <br>developement</h1>
+            </div>
+        </header>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="relative left-0 top-98 transform scale-y-160">
+          <path fill="#f3f4f5" fill-opacity="1" d="M0,192L60,186.7C120,181,240,171,360,192C480,213,600,267,720,288C840,309,960,299,1080,277.3C1200,256,1320,224,1380,208L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+        <section class="page">
+            <h1 class="text-6xl">Welcome!</h1>
+            
+            <h2 class="text-4xl mt-10">recent news</h2>
+            <p class="my-4">Welcome to my latest subpage! I'm back from inactivity, and I have some projects in mind, and a couple already in development. Some of my old games may be remade, as well. Make sure to subscribe so you'll know when something comes out!</p>
+            
+            <h2 class="text-4xl my-6">most voted project</h2>
+            <div class="flex w-full justify-center">
+                <div class="text-center bg-gray-700/30 rounded-xl p-3 cursor-pointer group transition duration-300 hover:bg-gray-700/50"
+                     onclick="javascript:window.open('https://www.khanacademy.org/computer-programming/black-n-white-game/6144760533663744/5266442959634432')">
+                    <img src='https://www.khanacademy.org/computer-programming/black-n-white-game/6144760533663744/6645969359126528.png' class="rounded-t-lg">
+                    <div class="bg-gray-700/20 p-1 rounded-b-lg">
+                        <h1 class="text-3xl mt-4">Black 'n' White</h1>
+                        <h2 class="text-2xl font-bold">61 votes</h2>
+                    </div>
+                </div>
+            </div>
+        </section> <!-- Home -->
+        <section class="page">
+            <h1 class="text-6xl">About me...</h1>
+            
+            <div id='profile' onclick='javascript:window.open("https://khanacademy.org/profile/gaminglemonss")'
+                 class="flex items-center justify-center p-6 my-6 bg-[rgb(255, 255, 255)] rounded-3xl transition duration-300 hover:inset-shadow-sm inset-shadow-gray-700 not:hover:shadow-xl">
+                <img src='https://cdn.kastatic.org/third_party/javascript-khansrc/live-editor/build/images/avatars/leafers-ultimate.png' width='150'
+                     class="ring-5 ring-black/20 hover:ring-[var(--theme-color)] hover:brightness-110 transition duration-300 rounded-full p-4 bg-[rgb(255, 255, 255)]">
+                <div class="mx-8">
+                    <h2 class="text-xl">Lemon Games</h2>
+                    <h3 class="font-bold">@gaminglemonss</h3>
+                    <h3>1,000,000+ Energy Points</h3>
+                </div>
+            </div>
+            
+            <h2 class="text-4xl mt-10">who am I, exactly?</h2>
+            <p class="text-lg my-4">My name is "Lemon Games", and I'm an amateur web and game developer. I left Khan Academy in 2023, after my original posting account was deleted. I lead Team Levi F. "Leviathan" in Clash of Code in 2023, since Levi was too busy to keep leading the team. I've also participated in Primavera that same year on Team Pyroach, and hosted Khanathon in September of 2022.</p>
+            
+            <h2 class="text-4xl mt-10">what do I like to do?</h2>
+            <p class="text-lg my-4">If I'm not working on a new game or website, I'm playing Minecraft, doing cross country, scrolling, or reading. my favorite artist is NF, by a landslide.</p>
+            
+            <h2 class="text-4xl mt-10">what do I program in?</h2>
+            <p class="text-lg my-4">I know JavaScript, HTML, CSS, Typescript, and some React and Python, and am learning Rust. You can find me on Github, Replit, and some other platforms.</p>
+        </section>
+        <section class="page">
+            <h1 class="text-6xl">how to subscribe</h1>
+            <p class="text-xl mt-10 mb-4">if you don't already know, you can get notified when I release a project by commenting a single dot <code>"."</code> under the <b>Subscribe Here</b> thread. Any message 3 characters or under works (<code>":)", "ha", ":P"</code>), but anything more <code>"subbed!"</code> will notify anyone else who's subbed for nothing.</p>
+            <i class="text-lg">If you're asked to remove your comment and refuse to, your comment will be flagged.</i>
+        </section>
+        <section class="page">
+            <h1 class="text-6xl mb-6">Projects</h1>
+            <div id="projectList"
+                 class="flex grid grid-cols-2 gap-4"></div>
+        </section>
+        
+        <script></script>
+        
+        <script type="module">
+            const pages = 
+            document.getElementsByClassName("page");
+            
+            window.nav = (index) => {
+                for (let i = 0; i < pages.length; i ++){
+                    pages[i].style.display = i === index-1 ? "block" : "none";
+                }
+                pages[index-1].style.display = "block";
+            
+                window.scroll({
+                    top: document.body.scrollHeight,
+                    left: 0,
+                    behavior: "smooth",
+                });
+                setTimeout(() => {
+                    window.scroll({
+                        top: 0,
+                        left: 0,
+                        behavior: "smooth",
+                    });
+                }, 500)
+            };
+            
+            const nav = window.nav;
+            
+            nav(1)
+        </script>
+        <script type="module">
+            import { animate, scroll, hover, inView, delay } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm";
+            const nav = document.getElementById("nav");
+            
+            // Navigation Animation + Scroll
+            inView(".page h1", (e) => {
+                delay(() => {
+                    const animation = animate(e, {
+                        opacity: 1,
+                        y: 0,
+                    })
+                }, 0.2);
+                    
+                nav.classList.add("-translate-y-27")
+                nav.classList.remove("opacity-0", "-translate-y-40");
+                    
+                return () => {
+                    nav.classList.add("opacity-0", "-translate-y-40");  
+                    nav.classList.remove("-translate-y-27")
+                    
+                    const close = animate(e, {
+                        opacity: 0,
+                        y: -20,
+                    })
+                }
+            });
+            inView(".page h2", (e) => {
+                delay(() => {
+                    const animation = animate(e, {
+                        opacity: 1,
+                        y: 0,
+                    })
+                }, 0.3);
+                                
+                return () => {
+                    const close = animate(e, {
+                        opacity: 0,
+                        y: -20,
+                    })
+                }
+            });
+            inView(".page p", (e) => {
+                delay(() => {
+                    const animation = animate(e, {
+                        opacity: 1,
+                        y: 0,
+                    })
+                }, 0.4);
+                return () => {
+                    const close = animate(e, {
+                        opacity: 0,
+                        y: -20,
+                    })
+                }
+            });
+            hover("nav", (e) => {
+                nav.classList.remove('-translate-y-27');
+                    
+                return () => nav.classList.add("-translate-y-27")
+            })
+            window.addEventListener("load", () => {
+                nav.classList.add("transition", "duration-300")
+            });
+            
+            // Snap Scrolling
+            setTimeout(() => {
+                inView(".page", (e) => {                    
+                    window.scroll({
+                        top: e.scrollTop + window.outerHeight - 100,
+                        left: 0,
+                        behavior: "smooth"
+                    })
+                    return () => {
+                        window.scroll({                 
+                            top: 0,
+                            left: 0,
+                            behavior: "smooth",
+                        });
+                    };
+                });
+            }, 1200);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        <script type="module">
+window.addEventListener('keydown', (e) => {
+  if (e.code !== 'Backquote') return;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 600;
+  canvas.height = 600;
+  const ctx = canvas.getContext('2d');
+
+  // --- Background ---
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, 600, 600);
+
+  // --- Top-right shapes (like your first group) ---
+  const drawTopGroup = () => {
+    // --- Largest shape ---
+    ctx.fillStyle = '#3f3b00'; // matches SVG fill
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 318.2);
+    ctx.bezierCurveTo(-32.3, 307.9, -64.6, 297.6, -91.2, 280.6);
+    ctx.bezierCurveTo(-117.7, 263.6, -138.4, 239.9, -160.5, 220.9);
+    ctx.bezierCurveTo(-182.5, 201.8, -205.9, 187.4, -232.2, 168.7);
+    ctx.bezierCurveTo(-258.5, 150, -287.8, 127.1, -302.6, 98.3);
+    ctx.bezierCurveTo(-317.5, 69.5, -317.8, 34.8, -318.2, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // --- Medium shape ---
+    ctx.fillStyle = '#b7af00';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 212.1);
+    ctx.bezierCurveTo(-21.5, 205.2, -43.1, 198.4, -60.8, 187);
+    ctx.bezierCurveTo(-78.5, 175.7, -92.3, 159.9, -107, 147.2);
+    ctx.bezierCurveTo(-121.7, 134.5, -137.2, 124.9, -154.8, 112.5);
+    ctx.bezierCurveTo(-172.3, 100, -191.9, 84.8, -201.7, 65.6);
+    ctx.bezierCurveTo(-211.6, 46.3, -211.9, 23.2, -212.1, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // --- Small shape ---
+    ctx.fillStyle = '#fff000';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 106.1);
+    ctx.bezierCurveTo(-10.8, 102.6, -21.5, 99.2, -30.4, 93.5);
+    ctx.bezierCurveTo(-39.2, 87.9, -46.1, 80, -53.5, 73.6);
+    ctx.bezierCurveTo(-60.8, 67.3, -68.6, 62.5, -77.4, 56.2);
+    ctx.bezierCurveTo(-86.2, 50, -95.9, 42.4, -100.9, 32.8);
+    ctx.bezierCurveTo(-105.8, 23.2, -105.9, 11.6, -106.1, 0);
+    ctx.closePath();
+    ctx.fill();
+};
+
+  
+
+  // --- Bottom-left group (mirrored) --- // Save current state
+          // Restore to default origin
+  const drawBottomGroup = () => {
+    // Largest
+    ctx.fillStyle = '#3f3b00';
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(0,-318.2);
+    ctx.bezierCurveTo(31.8,-310.3,63.6,-302.4,94.3,-290.1);
+    ctx.bezierCurveTo(124.9,-277.7,154.3,-260.9,172.2,-237);
+    ctx.bezierCurveTo(190.2,-213.2,196.7,-182.3,220.1,-159.9);
+    ctx.bezierCurveTo(243.4,-137.5,283.5,-123.6,302.6,-98.3);
+    ctx.bezierCurveTo(321.8,-73.1,320,-36.5,318.2,0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Medium
+    ctx.fillStyle = '#b7af00';
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(0,-212.1);
+    ctx.bezierCurveTo(21.2,-206.9,42.4,-201.6,62.8,-193.4);
+    ctx.bezierCurveTo(83.2,-185.1,102.8,-173.9,114.8,-158);
+    ctx.bezierCurveTo(126.8,-142.1,131.2,-121.5,146.7,-106.6);
+    ctx.bezierCurveTo(162.2,-91.6,189,-82.4,201.7,-65.6);
+    ctx.bezierCurveTo(214.5,-48.7,213.3,-24.4,212.1,0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Small
+    ctx.fillStyle = '#fff000';
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(0,-106.1);
+    ctx.bezierCurveTo(10.6,-103.4,21.2,-100.8,31.4,-96.7);
+    ctx.bezierCurveTo(41.6,-92.6,51.4,-87,57.4,-79);
+    ctx.bezierCurveTo(63.4,-71.1,65.6,-60.8,73.4,-53.3);
+    ctx.bezierCurveTo(81.1,-45.8,94.5,-41.2,100.9,-32.8);
+    ctx.bezierCurveTo(107.3,-24.4,106.7,-12.2,106.1,0);
+    ctx.closePath();
+    ctx.fill();
+  };
+// --- Top group ---
+ctx.save();                 // Save default origin
+ctx.translate(600, 0);      // Move origin like SVG transform
+drawTopGroup();             // Draw the top shapes
+ctx.restore();              // Return origin to top-left
+
+// --- Bottom group ---
+ctx.save();
+ctx.translate(0, 600);      // Move origin like SVG transform
+drawBottomGroup();          // Draw the bottom shapes
+ctx.restore();              // Back to default origin
+
+
+    // draw your bottom group paths here using the same negative coordinates
+    ctx.restore();
+  // --- Replace body content ---
+  document.body.innerHTML = `
+<div class="flex items-center justify-center w-[100vw] h-[100vh]">
+  <h1 style="text-shadow:0px 0px 40px var(--theme-color);" class="text-9xl text-[var(--theme-color)] transform translate-x-3 -translate-y-12">
+    Lemon's<br>Subpage
+  </h1>
+</div>
+`;
+  canvas.style.position = 'fixed';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '-1';
+  document.body.appendChild(canvas);
+});
+</script>
+        <script type>
+        var r=600,s=document.documentElement.clientWidth;window.parent.html2canvas=t=>{try{html2canvas(document.body,{width:s,height:s,useCORS:!0,onclone:t=>t.getAnimations().forEach((t=>{try{t.finish()}catch{}}))}).then((t=>{var e=document.createElement("canvas");e.width=r,e.height=r,e.getContext("2d").drawImage(t,0,0,t.width,t.height,0,0,r,r),window.top.postMessage(e.toDataURL(),"*")})).catch((t=>{alert("Thumbnail Script Error: "+t)}))}catch{window.top.postMessage(document.createElement("canvas").toDataURL(),"*")}};</script>
+    </body>
+</html>
+<!--
+
+LEMON HUB 2.0
+
+@CREDITS
+Bluebird@Birdwatcher03 - Thumbnail
+Haikei.app - Blobs in thumbnail
+AI - Helping properly show the thumbnail
+Duke - Giving feedback and suggestions
+
+the scrollin in the beginning aint a bug
+
+-->
