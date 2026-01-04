@@ -22,10 +22,6 @@ ignore the odd concept of "collecting fires"...
 
 **/
 // go away...
-// yall this is a WORKSPACE, PLEASE DONT VOTE
-
-// Credit to Daniel @dkareh
-(function(){return this;})().LoopProtector.prototype.leave = function(){};
 
 // setup
 size(600, 600, 1);
@@ -264,7 +260,7 @@ var transition = {
     particles: [],
     run: function(){
         if (this.timer >= 0){
-            for (var i = 0; i < 7; i ++){
+            for (var i = 0; i < 15; i ++){
                 this.particles.push({
                     x: random(0, width),
                     y: 700,
@@ -746,8 +742,11 @@ Button.prototype = {
             this.sz = lerp(this.sz, this.ogSZ, 0.05);
         }
         if (this.clicked()){
-            scene = this.to;
             transition.reset();
+            this.wasClicked = true;
+        }
+        if (this.wasClicked && transition.timer <= 10) {
+            scene = this.to;
         }
     },
     over: function(){
@@ -783,6 +782,7 @@ function loadLevel(nxt){
     fires = [];
     enemies = [];
     
+    
     for (var i = 0; i < levels[lvl].map.length; i ++){
         for (var j = 0; j < levels[lvl].map[i].length; j ++){
             var char = levels[lvl].map[i][j];
@@ -810,120 +810,17 @@ function loadLevel(nxt){
 loadLevel(false);
 
 var objs = [blocks, enemies, particles];
-
-// intro variables {
-// FONTS \\
-var fonts = [
-    createFont("monospace"),
-    createFont("Verdana Italic")
-];
-    textAlign(3, 3);
-    
-// VARIABLES \\
-var x1 = -400;
-var y1 = 800;
-var introX = 0;
-var done = false;
-    
-// MATRIX \\
-var matrix = [];
-
-var Matrix = function(){
-    this.x = random(0, width);
-    this.y = random(-600, height);
-    this.alpha = random(0, 255);
-    this.num = round(random(0, 1));
-    
-    this.run = function(){
-        fill(255, 255, 255, this.alpha);
-        textSize(35);
-        text(this.num, this.x, this.y);
-        
-        this.alpha -= 3;
-        
-        if (this.alpha <= 0){
-            this.alpha = 255;
-            this.x = random(0, width);
-            this.y = random(-600, height);
-        }
-        if (this.y > height){
-            this.y = random(-100, 0);
-        }
-    };
-};
-
-for (var i = 0; i < width; i ++){
-    var color1 = color(255, 247, 0);
-    var color2 = color(255, 183, 0);
-            
-    push();
-    stroke(lerpColor(color1, color2, i/height));
-    rect(0, i, width, 1);
-    pop();
-}
-var introBG = get();
-
-for (var i = 0; i < 50; i ++){
-    matrix.push(new Matrix());
-}
-// }
-
-function intro(){
-    
-    function main() {
-        translate(introX, 0);
-        
-        // BACKGROUND \\
-        image(introBG, 0, 0, width, height);
-        
-        // MATRIX \\
-        textFont(fonts[0]);
-        for (var i = 0; i < matrix.length; i ++){
-            matrix[i].run();
-        }
-        
-        // ANIMATIONS \\
-        x1 = lerp(x1, width/2, 0.1);
-        y1 = lerp(y1, height/2 + 100, 0.1);
-        
-        if (frameCount > 220){
-            introX = lerp(introX, -width*2, 0.02);
-            if (introX < -590){
-                resetMatrix();
-                matrix = [];
-                done = true;
-            }
-        }
-        if (frameCount < 220){
-            // MAIN TEXT \\
-            fill(255);
-            textFont(fonts[1]);
-            textSize(228);
-            text("LG", x1, height/2 - 50);
-            
-            textSize(66);
-            text("Presents...", width/2, y1);
-        }
-    }
-    main();
-}
 function menu(){
-    
-    if (frameCount < 300){
-        push();
-        intro();
-        pop();
-    }
-    if (done){
     playButton.draw();
+    
+    particles.push(new Particle(random(60, 400), 200, color(255, 149, 0)));
+    particles.push(new Particle(random(270, 580), 360, color(0, 64, 255)));
     
     for (var i = particles.length; i --;){
         particles[i].run();
-            
+        
         if (particles[i].dead) { particles.splice(i, 1); }
     }
-    particles.push(new Particle(random(60, 400), 200, color(255, 149, 0)));
-    particles.push(new Particle(random(270, 580), 360, color(0, 64, 255)));
     
     strokeWeight(3);
     stroke(255);
@@ -1049,12 +946,17 @@ function menu(){
     pop();
     // }
     noStroke();
-    }
+    
 }
 function game(){
     translate(-cam.x, -cam.y);
     cam.follow();
     
+    for (var i = particles.length; i --;){
+        particles[i].run();
+            
+        if (particles[i].dead) { particles.splice(i, 1); }
+    }
     for (var i = fires.length; i --;){
         if (onCanvas(fires[i], cam)){
             fires[i].draw();
@@ -1106,9 +1008,7 @@ draw = function() {
         }
         
         this[scene]();
-        if (done){
-            transition.run();
-        }
+        transition.run();
         clicked = false;
         
     } catch (error){
