@@ -17,11 +17,16 @@ https://www.khanacademy.org/cs/i/4710238676172800
 
 @CREDITS
 NL's Graphic Tool 2.0 - @hyundai.ka / @tr4shc0der (main)
+My sister - Level 2
+AI - Levels 7 and 8
 
 ignore the odd concept of "collecting fires"...
+if you spot any bugs (I know enemies sometimes teleport), please lmk, I made this quickly
 
 **/
-// go away...
+
+// Credit to Daniel @dkareh
+(function(){return this;})().LoopProtector.prototype.leave = function(){};
 
 // setup
 size(600, 600, 1);
@@ -29,7 +34,7 @@ smooth();
 noStroke();
 
 // variables
-var loadLevel, player;
+var loadLevel, player, cam;
 
 var BLOCKSIZE = 50;
 var GRAVITY = 0.35;
@@ -214,6 +219,147 @@ var levels = [
 "                                             sssssss",
         ],
     },
+    {
+        map: [
+"d! e                     !!!",
+"dddddd           ddddddddddd",
+"d               dd",
+"d       d         ",
+"d                 ",
+"d                 ",
+"d         d       ",
+"d               dd",
+"d                d!",
+"d                dd",
+"d          d     d",
+"d                d",
+"d@              dd",
+"d                d!          !!     eee",
+"dddddddddddddddddddddddddddd^^^^dddddddddd",
+"ddddddddddddddddddddddddddddddddddddddddddd",
+"dddddddddddddddddddddddddddddddddddddddddddd",
+"ddddddddddddddddddddddddddddddddddddddddddddd !! %",
+"ddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        ],
+    },
+    {
+        map: [
+"sssssssssssssssssssssssss",
+"s                       s",
+"s                       s",
+"s                       s",
+"s                       s",
+"s                       s",
+"s                       s",
+"s                       s",
+"s                       s",
+"s          %            s",
+"s        ssssss         s",
+"s                       s",
+"s          @            s",
+"s                       s",
+"s e                     s",
+"s   dddddddddddddddddddds",
+"sddddddddddddddddddddddds",
+"sddddddddddddddddddddddds",
+"sddddddddddddddddddddddds",
+"sddddddddddddddddddddddds",
+"sddddddddddddddddddddddds",
+        ],
+        messages: [
+            {
+                txt: "'Elevators were invented in 1874'\nPeople before 1874:",
+                x: 600,
+                y: 650,
+            },
+        ],
+    },
+    {
+    map: [
+"ssssssssssssssssssssssssssss",
+"s             e            s",
+"s             e            s",
+"s    @                     s",
+"s                          s",
+"s                       !  s",
+"s   ssss^^^ss    ss^^^^ss  s",
+"s                          s",
+"s          !   !           s",
+"s                          s",
+"s     e                    s",
+"s                          s",
+"s        sssssssssss       s",
+"s                          s",
+"s                          s",
+"s             %            s",
+"ssssssssssssssssssssssssssss",
+        ],
+    },
+    {
+    map: [
+"dddddddddddddddddddddddddddddddd",
+"d                              d",
+"d        e           e         d",
+"d            @                 d",
+"d    !!!!           ssss       d",
+"d                 !            d",
+"d       ssssssssssss           d",
+"d                              d",
+"d   e                    e     d",
+"d                              d",
+"d        !!!                   d",
+"d                 sssssss      d",
+"d                              d",
+"d      !   !   !               d",
+"d                              d",
+"d             %       !     !  d",
+"ddd^^ddddddddddddddddddddddddddd",
+    ],
+},
+    {
+        map: [
+"s                                                    %",
+"s                         e !!                       ss",
+"s             e         ssssss^^^^^^         e!!       ",
+"s                                          sssss^^",
+"s           !",
+"s           s^^^^^^",
+"s@           ",
+"s",
+"s",
+"sssssssss^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        ],
+        messages: [
+            {
+                txt: "Welcome one, welcome all!\nTo our Soul Fire Trampoline Park!",
+                x: 306,
+                y: 275,
+            },
+            {
+                txt: "Hop up on those spikes to reach the fire\n(but watch out for the monsters, hehe)",
+                x: 645,
+                y: 113,
+            },
+        ],
+    },
+    {
+        map: [
+"sssssssssssssssssssssssssssssssssssssssssssss",
+"s                                           s",
+"s                                           s",
+"s                                           s",
+"s                                           s",
+"s   s @ s  sss  s   s    s     s  s ss   s  s",
+"s   s   s s   s s   s    s  s  s  s s s  s  s",
+"s    ssss s   s s   s    s  s  s  s s  s s  s",
+"s       s s   s s   s    s  s  s  s s   ss  s",
+"s    sss   sss   sss      ss ss   s s    s  s",
+"s                                           s",
+"s                                           s",
+"s!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!s",
+"sssssssssssssssssssssssssssssssssssssssssssss",
+        ],
+    },
 ];
 
 var clicked = false;
@@ -226,6 +372,23 @@ textAlign(3, 3); // center, center
 // easy pushMatrix/Style() and popMatrix/Style();
 function push() { pushMatrix(); pushStyle(); }
 function pop() { popStyle(); popMatrix(); }
+
+background(0, 0);
+fill(0);
+push();
+translate(-365, -430);
+scale(1.5);
+beginShape();
+    vertex(294,517);
+    bezierVertex(188,485,284,368,289,317);
+    vertex(320,393);
+    bezierVertex(347,361,323,286,316,288);
+   bezierVertex(355,303,434,459,343,519);
+    bezierVertex(331,523,291,517,291,517);
+    endShape();
+pop();
+var fireImg = get(0, 0, 200, 300);
+
 
 // user input
 function keyPressed(){
@@ -253,14 +416,13 @@ function onCanvas(obj, c){
            obj.y + obj.h > c.y && obj.y < c.y + height + obj.h;
 }
 
-
 var transition = {
     alpha: 255,
     timer: 60,
     particles: [],
     run: function(){
         if (this.timer >= 0){
-            for (var i = 0; i < 15; i ++){
+            for (var i = 0; i < 7; i ++){
                 this.particles.push({
                     x: random(0, width),
                     y: 700,
@@ -330,12 +492,22 @@ var player = {
     health: 100,
     deaths: 0,
     power: 100,
+    maxPower: 100,
     powerRadius: 0,
     draw: function(){
-        fill(255, 0, 0);
-        rect(this.x - this.w/2, this.y - 30, 100*this.w/50, 10, 20);
-        fill(0, 255, 0);
-        rect(this.x - this.w/2, this.y - 30, this.health*this.w/50, 10, 20);
+        push();
+        rectMode(CENTER);
+            fill(255, 0, 0);
+            rect(this.x + this.w/2, this.y - 30, 100*this.w/50, 10, 20);
+            fill(0, 255, 0);
+            rect(this.x + this.w/2, this.y - 30, this.health*this.w/50, 10, 20);
+        
+            fill(255, 0, 0);
+            rect(this.x + this.w/2, this.y - 50, this.maxPower*this.w/50, 10, 20);
+            fill(76, 151, 255);
+            rect(this.x + this.w/2, this.y - 50, this.power*this.w/50, 10, 20);
+        pop();
+        
         if (this.powerRadius > 0.5){
             for (var i = 0; i < 10; i ++){
                 fill(240, -150 + this.powerRadius + i * 5);
@@ -405,6 +577,9 @@ var player = {
         
         pop();
         
+        fill(0);
+        rect(this.x+this.w/4+this.v.x*2, this.y+this.h/12+this.v.y, 10, 25, 10);
+        rect(this.x+this.w/1.7+this.v.x*2, this.y+this.h/12+this.v.y, 10, 25, 10);
     },
     move: function(){
         if (keys.a || keys[LEFT]){
@@ -419,7 +594,7 @@ var player = {
         this.collide(this.v.x, 0);
         
         if ((keys.w || keys[UP]) && !this.falling){
-            this.v.y = -9;
+            this.v.y = -11;
             this.falling = true;
         }
         
@@ -428,14 +603,26 @@ var player = {
         this.collide(0, this.v.y);
         
         if (this.y > height+(levels[lvl].map.length * BLOCKSIZE)||this.health<=0){
+            cam.linger();
+            for (var i = 0; i < 100; i ++){
+                particles.push(new Particle(this.x+20+random(0, this.w), this.y+BLOCKSIZE+this.h-i, color(255)));
+            }
             this.reset(true);
+        } else {
+            this.health += this.health<100?0.1:0;
         }
-        this.health += this.health<100?0.1:0;
+        if (cam.delay === -10){
+            for (var i = 0; i < 100; i ++){
+                particles.push(new Particle(this.setX+20+random(0, this.w), this.setY+BLOCKSIZE+this.h-i, color(255)));
+            }
+        }
         
-        if (keys[32]){
+        if (keys[32] && this.power > 0){
             this.powerRadius = lerp(this.powerRadius, 200, 0.05);
+            this.power -= 0.3;
         } else {
             this.powerRadius = lerp(this.powerRadius, 0, 0.05);
+            this.power += this.power<this.maxPower?0.3:0;
         }
     },
     collide: function(vx, vy){
@@ -443,6 +630,7 @@ var player = {
         for (var i in objs){
             for (var j in objs[i]){
                 var obj = objs[i][j];
+                var hb = obj;
                 if (rectRect(this, obj)){
                     if (obj.type !== "portal"){
                         if (vx > 0){
@@ -487,13 +675,10 @@ var player = {
         this.move();
     },
     reset: function(death){
-        this.health = 100;
-        this.power = 100;
         this.x = this.setX;
         this.y = this.setY;
-        for (var i = 0; i < 100; i ++){
-            particles.push(new Particle(this.setX+20+random(0, this.w), this.setY+this.h-i, color(255)));
-        }
+        this.health = 100;
+        this.power = 100;
         if (death) { this.deaths ++; }
     },
 };
@@ -506,6 +691,9 @@ var Block = function(x, y, type){
     this.type = type;
     this.angle = 0;
     this.portalTimer = 180;
+    
+    // this.y = this.y - (this.type==="spike"?BLOCKSIZE/4:0);
+    this.h = this.h - (this.type==="spike"?BLOCKSIZE/2:0);
 };
 Block.prototype = {
     draw: function(){
@@ -560,35 +748,38 @@ Block.prototype = {
             break;
             case 'spike':
                 fill(102, 102, 102);
+                push();
+                translate(0, -this.h/2-10);
                 beginShape();
-                
-                vertex(this.x, this.y+this.h);
+                vertex(this.x, this.y+BLOCKSIZE);
                 vertex(this.x+this.w/2-20, this.y+22);
-                vertex(this.x+this.w-35, this.y+this.h-11);
-                vertex(this.x+this.w-26, this.y+this.h-33);
-                vertex(this.x+this.w-20, this.y+this.h-16);
-                vertex(this.x+this.w-10, this.y+this.h-30);
-                vertex(this.x+this.w, this.y+this.h);
+                vertex(this.x+this.w-35, this.y+BLOCKSIZE-11);
+                vertex(this.x+this.w-26, this.y+BLOCKSIZE-33);
+                vertex(this.x+this.w-20, this.y+BLOCKSIZE-16);
+                vertex(this.x+this.w-10, this.y+BLOCKSIZE-30);
+                vertex(this.x+this.w, this.y+BLOCKSIZE);
                 
                 endShape();
+                pop();
+                rect(this.x, this.y+this.h, this.w, this.h);
         }
     },
 };
 
 var Enemy = function(x, y){
+    this.setX = x;
+    this.setY = y;
     this.x = x;
     this.y = y;
     this.w = BLOCKSIZE * (1 + Math.round(Math.random()));
     this.h = BLOCKSIZE * (1 + Math.round(Math.random()));
-    this.x = this.x - (this.w>BLOCKSIZE?this.w/2:0);
-    this.y = this.y - (this.h>BLOCKSIZE?this.h/2:0);
     
     this.v = { x: 0, y: 0 };
     this.grav = GRAVITY;
     this.falling = false;
-    this.canFloat = Math.random() < 0.3;
+    this.canFloat = Math.random() < 0.3 || lvl === 5;
     this.dangerous = Math.random() < 0.05;
-    this.range = 10;
+    this.range = 5;
     
     this.angle = 0;
     
@@ -610,7 +801,9 @@ Enemy.prototype = {
         }
     },
     move: function(){
-        this.angle = atan2(player.y - this.y, player.x - this.x);
+        if (dist(this.x,this.y,player.x,player.y)<=BLOCKSIZE*this.range){
+            this.angle = atan2(player.y - this.y, player.x - this.x);
+        }
         
         if (!this.dangerous){
             this.v.x = cos(this.angle) * 3;
@@ -621,17 +814,30 @@ Enemy.prototype = {
         this.collide(this.v.x, 0);
         
         this.y += this.v.y;
-        this.v.y += this.grav + (this.canFloat ? sin(this.angle) : 0);
+        this.v.y += (this.canFloat ? sin(this.angle) : this.grav);
+        this.v.y = constrain(this.v.y, -player.speed-5, player.speed+5);
+        this.v.x = constrain(this.v.x, -player.speed-7, player.speed+7);
         this.collide(0, this.v.y);
-        
+        if (!this.canFloat){
+            if (player.y < this.y - BLOCKSIZE&&!this.falling){
+                this.v.y = -10;
+                this.falling = true;
+            }
+        }
         if (dist(this.x,this.y,player.x,player.y)<=player.powerRadius){
             this.health-=(max(this.w, this.h)/BLOCKSIZE)/5;
         }
         if (this.health <= 0){ this.dead = true; }
         if (this.dead){
+            player.maxPower += 20;
             for (var i = 0; i < 50; i ++){
                 particles.push(new Particle(this.x+10+random(0, this.w-20), this.y+this.h-10, color(0)));
             }
+        }
+        if (player.dead){
+            this.x = this.setX;
+            this.y = this.setY;
+            this.health = 100;
         }
     },
     collide: function(vx, vy){
@@ -639,7 +845,7 @@ Enemy.prototype = {
         for (var i in objs){
             for (var j in objs[i]){
                 var obj = objs[i]===player?objs[i]:objs[i][j];
-                if (rectRect(this, obj)&&obj!==this){
+                if (rectRect(this, obj)&&obj!==this&&obj.type!=="portal"){
                     if (obj === player){
                         player.health --;
                     }
@@ -667,9 +873,7 @@ Enemy.prototype = {
     },
     run: function(){
         this.draw();
-        if (dist(this.x,this.y,player.x,player.y)<=BLOCKSIZE*this.range){
-            this.move();
-        }
+        this.move();
     },
 };
 
@@ -762,12 +966,20 @@ var Camera = function(target){
     this.x = target.x || 0;
     this.y = target.y || 0;
     this.target = target;
+    this.delay = 0;
 };
 Camera.prototype = {
     follow: function(){
-        this.x = lerp(this.x, this.target.x - width/2, 0.05);
-        this.x = constrain(this.x, 0, levels[lvl].map[0].length*BLOCKSIZE + width);
-        this.y = lerp(this.y, this.target.y + this.target.h/2 - height/2, 0.05);
+        if (this.target === undefined) { return; }
+        if (this.delay <= 0){
+            this.x = lerp(this.x, this.target.x - width/2, 0.05);
+            this.x = constrain(this.x, 0, levels[lvl].map[0].length*BLOCKSIZE + width);
+            this.y = lerp(this.y, this.target.y + this.target.h/2 - height/2, 0.05);
+        }
+        this.delay --;
+    },
+    linger: function(){
+        this.delay = 90;
     },
 };
 var cam = new Camera(player);
@@ -778,10 +990,11 @@ function loadLevel(nxt){
         transition.reset();
     }
     
+    player.health = 100;
+    player.power = player.maxPower;
     blocks = [];
     fires = [];
     enemies = [];
-    
     
     for (var i = 0; i < levels[lvl].map.length; i ++){
         for (var j = 0; j < levels[lvl].map[i].length; j ++){
@@ -806,25 +1019,123 @@ function loadLevel(nxt){
         }
     }
     maxFires = fires.length;
+    if (lvl===8){
+        println("Thanks for playing! If you enjoyed this game, sub to me for more!\nhttps://www.khanacademy.org/cs/i/4710238676172800");
+    }
 }
 loadLevel(false);
 
 var objs = [blocks, enemies, particles];
-function menu(){
-    playButton.draw();
+
+// intro variables {
+// FONTS \\
+var fonts = [
+    createFont("monospace"),
+    createFont("Verdana Italic")
+];
+    textAlign(3, 3);
     
-    particles.push(new Particle(random(60, 400), 200, color(255, 149, 0)));
-    particles.push(new Particle(random(270, 580), 360, color(0, 64, 255)));
+// VARIABLES \\
+var x1 = -400;
+var y1 = 800;
+var introX = 0;
+var done = false;
+    
+// MATRIX \\
+var matrix = [];
+
+var Matrix = function(){
+    this.x = random(0, width);
+    this.y = random(-600, height);
+    this.alpha = random(0, 255);
+    this.num = round(random(0, 1));
+    
+    this.run = function(){
+        fill(255, 255, 255, this.alpha);
+        textSize(35);
+        text(this.num, this.x, this.y);
+        
+        this.alpha -= 3;
+        
+        if (this.alpha <= 0){
+            this.alpha = 255;
+            this.x = random(0, width);
+            this.y = random(-600, height);
+        }
+        if (this.y > height){
+            this.y = random(-100, 0);
+        }
+    };
+};
+
+for (var i = 0; i < width; i ++){
+    var color1 = color(255, 247, 0);
+    var color2 = color(255, 183, 0);
+            
+    push();
+    stroke(lerpColor(color1, color2, i/height));
+    rect(0, i, width, 1);
+    pop();
+}
+var introBG = get();
+
+for (var i = 0; i < 50; i ++){
+    matrix.push(new Matrix());
+}
+// }
+
+function intro(){
+    
+    function main() {
+        translate(introX, 0);
+        
+        // BACKGROUND \\
+        image(introBG, 0, 0, width, height);
+        
+        // MATRIX \\
+        textFont(fonts[0]);
+        for (var i = 0; i < matrix.length; i ++){
+            matrix[i].run();
+        }
+        
+        // ANIMATIONS \\
+        x1 = lerp(x1, width/2, 0.1);
+        y1 = lerp(y1, height/2 + 100, 0.1);
+        
+        if (frameCount > 220){
+            introX = lerp(introX, -width*2, 0.02);
+            if (introX < -100){
+                resetMatrix();
+                done = true;
+            }
+        }
+        if (frameCount < 220){
+            // MAIN TEXT \\
+            fill(255);
+            textFont(fonts[1]);
+            textSize(228);
+            text("LG", x1, height/2 - 50);
+            
+            textSize(66);
+            text("Presents...", width/2, y1);
+        }
+    }
+    main();
+}
+function menu(){
+    
+    playButton.draw();
     
     for (var i = particles.length; i --;){
         particles[i].run();
-        
+            
         if (particles[i].dead) { particles.splice(i, 1); }
     }
+    particles.push(new Particle(random(60, 400), 200, color(255, 149, 0)));
+    particles.push(new Particle(random(270, 580), 360, color(0, 64, 255)));
     
     strokeWeight(3);
     stroke(255);
-    
     push();
     translate(-41, 37);
     scale(0.7);
@@ -938,15 +1249,20 @@ function menu(){
     
     // play
     push();
-    translate(-60, -105);
+    translate(-62, -105);
     scale(1.22);
-    line(282, 518, 286, 442);
-    line(282, 447, 321, 482);
-    line(282, 515, 321, 482);
+    line(288, 518, 286, 442);
+    line(282, 447, 329, 485);
+    line(282, 515, 330, 480);
     pop();
     // }
     noStroke();
     
+    if (frameCount < 300){
+        push();
+        intro();
+        pop();
+    }
 }
 function game(){
     translate(-cam.x, -cam.y);
@@ -995,23 +1311,35 @@ function game(){
     textSize(20);
     text("Level " + String(lvl+1)+"\nFires Collected: "+(maxFires-fires.length)+"/"+maxFires, 20, 550);
     pop();
-    
+    if (lvl >= levels.length){
+        transition.reset();
+        scene = 'win';
+    }
+}
+function win(){
+    fill(255);
+    textSize(40);
+    text("YOU MADE IT!", width/2, 100);
+    text("Thanks for playing!", width/2, 300);
 }
 draw = function() {
     try {
         background(0, 37, 122);
         for (var i = 0; i < height; i ++){
-            var c = lerpColor(color(0, 15, 130),color(0, 3, 194),i/height);
+            var c = lerpColor(color(0, 45, 128),color(0, 68, 194),i/height);
             stroke(c);
             line(0, i, width, i);
             noStroke();
         }
-        
+        for (var i = 0; i < 5; i ++){
+            image(fireImg, -50+i*160, 329);
+        }
         this[scene]();
-        transition.run();
+        if (done){
+            transition.run();
+        }
         clicked = false;
-        
     } catch (error){
-        println(error.message);
+        // println(error);
     }
 };
